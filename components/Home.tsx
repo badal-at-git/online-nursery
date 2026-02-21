@@ -53,19 +53,22 @@ const Home: React.FC = () => {
       id: 1,
       title: 'Bloom Your Space',
       subtitle: 'Curated collection of rare & exotic plants',
-      image: 'https://images.pexels.com/photos/1002703/pexels-photo-1002703.jpeg?auto=compress&cs=tinysrgb&w=1920',
+      gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      accent: '#667eea',
     },
     {
       id: 2,
       title: 'Fresh Flowers Daily',
       subtitle: 'Hand-picked arrangements delivered to your door',
-      image: 'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=1920',
+      gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+      accent: '#f093fb',
     },
     {
       id: 3,
       title: 'Garden Essentials',
       subtitle: 'Everything you need to nurture your green sanctuary',
-      image: 'https://images.pexels.com/photos/1084199/pexels-photo-1084199.jpeg?auto=compress&cs=tinysrgb&w=1920',
+      gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+      accent: '#4facfe',
     },
   ];
 
@@ -221,9 +224,118 @@ const Home: React.FC = () => {
           <div
             key={slide.id}
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
-            style={{ backgroundImage: `url(${slide.image})` }}
+            style={{ background: slide.gradient }}
           >
             <div className="hero-overlay" />
+
+            {/* Animated Background Elements */}
+            <div className="hero-bg-elements">
+              <motion.div
+                className="floating-element leaf-1"
+                animate={{
+                  y: [0, -30, 0],
+                  rotate: [0, 10, 0],
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                🌿
+              </motion.div>
+              <motion.div
+                className="floating-element leaf-2"
+                animate={{
+                  y: [0, -40, 0],
+                  rotate: [0, -15, 0],
+                }}
+                transition={{
+                  duration: 7,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: 0.5,
+                }}
+              >
+                🍃
+              </motion.div>
+              <motion.div
+                className="floating-element flower-1"
+                animate={{
+                  y: [0, -25, 0],
+                  x: [0, 10, 0],
+                  rotate: [0, 5, 0],
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: 1,
+                }}
+              >
+                🌸
+              </motion.div>
+              <motion.div
+                className="floating-element flower-2"
+                animate={{
+                  y: [0, -35, 0],
+                  x: [0, -15, 0],
+                }}
+                transition={{
+                  duration: 9,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: 1.5,
+                }}
+              >
+                🌺
+              </motion.div>
+              <motion.div
+                className="floating-element plant-1"
+                animate={{
+                  y: [0, -20, 0],
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: 7,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: 2,
+                }}
+              >
+                🪴
+              </motion.div>
+              <motion.div
+                className="floating-element sparkle-1"
+                animate={{
+                  scale: [0, 1, 0],
+                  opacity: [0, 1, 0],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                ✨
+              </motion.div>
+              <motion.div
+                className="floating-element sparkle-2"
+                animate={{
+                  scale: [0, 1, 0],
+                  opacity: [0, 1, 0],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                  delay: 1.5,
+                }}
+              >
+                ✨
+              </motion.div>
+            </div>
+
             <div className="hero-content">
               <motion.h1
                 className="hero-title"
