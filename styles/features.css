@@ -1,0 +1,40 @@
+/* Features Section */
+.features-section {
+    position: relative;
+    background: linear-gradient(135deg, #e8f3ed 0%, #d4e7dc 100%);
+    padding: 6rem 2rem;
+    width: 100%;
+}
+
+.features-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 3rem;
+}
+
+.feature-item {
+    text-align: center;
+    padding: 2rem;
+}
+
+.feature-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.feature-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: #2d5f3f;
+    margin: 0 0 0.8rem 0;
+    font-weight: 600;
+}
+
+.feature-text {
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    color: #6b8e7c;
+    margin: 0;
+}

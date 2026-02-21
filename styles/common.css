@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap');
+
+/* Common Styles */
+.home-container {
+    width: 100%;
+    overflow-x: hidden;
+    background: #fafaf8;
+    padding-top: 80px;
+    /* Space for fixed header */
+}
+
+/* Section Header Styles */
+.section-header {
+    text-align: center;
+    margin-bottom: 5rem;
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: #2d5f3f;
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+}
+
+.section-subtitle {
+    font-family: 'Lato', sans-serif;
+    font-size: 1.2rem;
+    color: #6b8e7c;
+    font-weight: 300;
+    letter-spacing: 0.03em;
+}
