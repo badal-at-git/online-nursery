@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemCount }) => {
                     {/* Logo */}
                     <div className="logo">
                         <span className="logo-icon">🌿</span>
-                        <span className="logo-text">Bloom & Grow</span>
+                        <span className="logo-text">Online Nursery</span>
                     </div>
 
                     {/* Desktop Navigation */}

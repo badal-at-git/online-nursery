@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Header from './Header';
 import Toast from './Toast';
+import Footer from './Footer';
 import '../styles/common.css';
 import '../styles/hero.css';
 import '../styles/categories.css';
@@ -613,6 +614,9 @@ const Home: React.FC = () => {
           </motion.div>
         </motion.div>
       </section>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
