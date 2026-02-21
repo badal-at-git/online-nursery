@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import Header from './Header';
-import Cart from './Cart';
+import Toast from './Toast';
 import '../styles/common.css';
 import '../styles/hero.css';
 import '../styles/categories.css';
 import '../styles/products.css';
 import '../styles/features.css';
-import '../styles/newsletter.css';
 
 // Types
 interface Product {
@@ -38,9 +38,11 @@ interface CartItem {
 }
 
 const Home: React.FC = () => {
+  const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   const { scrollY } = useScroll();
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   // removed applying `scale` to the whole hero section because transforms
@@ -157,27 +159,32 @@ const Home: React.FC = () => {
     return () => clearInterval(timer);
   }, [heroSlides.length]);
 
+  useEffect(() => {
+    // Load cart from localStorage
+    const savedCart = localStorage.getItem('cartItems');
+    if (savedCart) {
+      setCartItems(JSON.parse(savedCart));
+    }
+  }, []);
+
   const addToCart = (product: Product) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...prevItems, { ...product, quantity: 1 }];
-    });
-    setIsCartOpen(true);
-  };
+    const existingItem = cartItems.find((item) => item.id === product.id);
+    let updatedItems;
 
-  const updateQuantity = (id: number, quantity: number) => {
-    setCartItems((prevItems) =>
-      prevItems.map((item) => (item.id === id ? { ...item, quantity } : item))
-    );
-  };
+    if (existingItem) {
+      updatedItems = cartItems.map((item) =>
+        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+      );
+    } else {
+      updatedItems = [...cartItems, { ...product, quantity: 1 }];
+    }
 
-  const removeItem = (id: number) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+    setCartItems(updatedItems);
+    localStorage.setItem('cartItems', JSON.stringify(updatedItems));
+
+    // Show toast notification
+    setToastMessage(`${product.name} added to cart!`);
+    setShowToast(true);
   };
 
   const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -207,15 +214,16 @@ const Home: React.FC = () => {
   return (
     <div className="home-container">
       {/* Header */}
-      <Header onCartClick={() => setIsCartOpen(true)} cartItemCount={cartItemCount} />
+      <Header
+        onCartClick={() => router.push('/cart')}
+        cartItemCount={cartItemCount}
+      />
 
-      {/* Cart Sidebar */}
-      <Cart
-        isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
-        items={cartItems}
-        onUpdateQuantity={updateQuantity}
-        onRemoveItem={removeItem}
+      {/* Toast Notification */}
+      <Toast
+        message={toastMessage}
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
       />
 
       {/* Hero Section */}
@@ -402,7 +410,7 @@ const Home: React.FC = () => {
               key={category.id}
               className="category-card"
               variants={itemVariants}
-              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+              whileHover={{ y: -10, transition: { duration: 0.2 } }}
             >
               <div className="category-image-wrapper">
                 <img src={category.image} alt={category.name} className="category-image" />
@@ -442,7 +450,7 @@ const Home: React.FC = () => {
               key={product.id}
               className="product-card"
               variants={itemVariants}
-              whileHover={{ y: -8 }}
+              whileHover={{ y: -8, transition: { duration: 0.2 } }}
             >
               <div className="product-image-wrapper">
                 <img src={product.image} alt={product.name} className="product-image" />
@@ -504,38 +512,6 @@ const Home: React.FC = () => {
             <h3 className="feature-title">Eco-Friendly</h3>
             <p className="feature-text">Sustainable packaging</p>
           </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Newsletter Section */}
-      <section className="newsletter-section">
-        <motion.div
-          className="newsletter-content"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={itemVariants}
-        >
-          <h2 className="newsletter-title">Join Our Garden Community</h2>
-          <p className="newsletter-text">
-            Get plant care tips, exclusive offers, and new arrival updates
-          </p>
-          <form className="newsletter-form">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="newsletter-input"
-              required
-            />
-            <motion.button
-              type="submit"
-              className="newsletter-button"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Subscribe
-            </motion.button>
-          </form>
         </motion.div>
       </section>
     </div>

@@ -84,7 +84,6 @@
     gap: 1rem;
 }
 
-.search-btn,
 .cart-btn {
     background: none;
     border: none;
@@ -96,7 +95,6 @@
     position: relative;
 }
 
-.search-btn:hover,
 .cart-btn:hover {
     transform: scale(1.1);
 }
@@ -401,9 +399,5 @@
 @media (max-width: 480px) {
     .logo-text {
         display: none;
-    }
-
-    .search-btn {
-        font-size: 1.3rem;
     }
 }

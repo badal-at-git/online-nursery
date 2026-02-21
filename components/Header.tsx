@@ -49,9 +49,6 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemCount }) => {
 
                     {/* Actions */}
                     <div className="header-actions">
-                        <button className="search-btn" aria-label="Search">
-                            🔍
-                        </button>
                         <button
                             className="auth-btn"
                             onClick={() => setIsSignInOpen(true)}

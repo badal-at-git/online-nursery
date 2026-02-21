@@ -27,7 +27,7 @@
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .product-card:hover {
@@ -61,7 +61,7 @@
     border-radius: 50px;
     cursor: pointer;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.2s ease;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
 }
 
@@ -120,7 +120,7 @@
     font-weight: 700;
     border-radius: 50px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .add-to-cart:hover {
