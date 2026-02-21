@@ -26,6 +26,7 @@ interface Category {
   name: string;
   image: string;
   description: string;
+  slug: string;
 }
 
 interface CartItem {
@@ -43,11 +44,32 @@ const Home: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-  // removed applying `scale` to the whole hero section because transforms
-  // create a new stacking context and caused later sections to overlap.
-  // If you want a subtle scale effect, apply it to inner elements instead.
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (selectedProduct) {
+      const scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+      document.body.classList.add('modal-open');
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.classList.remove('modal-open');
+      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
+    return () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.classList.remove('modal-open');
+    };
+  }, [selectedProduct]);
 
   // Sample data - will be replaced with database later
   const heroSlides = [
@@ -80,24 +102,28 @@ const Home: React.FC = () => {
       name: 'Indoor Plants',
       image: 'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=600',
       description: 'Perfect for your living space',
+      slug: 'indoor-plants',
     },
     {
       id: 2,
       name: 'Flowering Plants',
       image: 'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=600',
       description: 'Add color to your garden',
+      slug: 'flowering-plants',
     },
     {
       id: 3,
       name: 'Succulents',
       image: 'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=600',
       description: 'Low maintenance beauties',
+      slug: 'succulents',
     },
     {
       id: 4,
       name: 'Bouquets',
       image: 'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=600',
       description: 'Fresh flower arrangements',
+      slug: 'bouquets',
     },
   ];
 
@@ -167,7 +193,10 @@ const Home: React.FC = () => {
     }
   }, []);
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: Product, e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation();
+    }
     const existingItem = cartItems.find((item) => item.id === product.id);
     let updatedItems;
 
@@ -226,13 +255,85 @@ const Home: React.FC = () => {
         onClose={() => setShowToast(false)}
       />
 
+      {/* Product Detail Modal */}
+      {selectedProduct && (
+        <motion.div
+          className="modal-overlay"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => setSelectedProduct(null)}
+        >
+          <motion.div
+            className="product-modal"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="modal-close" onClick={() => setSelectedProduct(null)}>
+              ✕
+            </button>
+            <div className="modal-content">
+              <div className="modal-image">
+                <img src={selectedProduct.image} alt={selectedProduct.name} />
+              </div>
+              <div className="modal-details">
+                <span className="modal-category">{selectedProduct.category}</span>
+                <h2 className="modal-title">{selectedProduct.name}</h2>
+                <p className="modal-description">{selectedProduct.description}</p>
+                <div className="modal-price">${selectedProduct.price}</div>
+                <div className="modal-info">
+                  <div className="info-item">
+                    <span className="info-icon">💧</span>
+                    <div>
+                      <strong>Watering</strong>
+                      <p>Water when top soil is dry</p>
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-icon">☀️</span>
+                    <div>
+                      <strong>Light</strong>
+                      <p>Bright indirect sunlight</p>
+                    </div>
+                  </div>
+                  <div className="info-item">
+                    <span className="info-icon">🌡️</span>
+                    <div>
+                      <strong>Temperature</strong>
+                      <p>18-24°C (65-75°F)</p>
+                    </div>
+                  </div>
+                </div>
+                <motion.button
+                  className="modal-add-to-cart"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={(e) => {
+                    addToCart(selectedProduct, e);
+                    setSelectedProduct(null);
+                  }}
+                >
+                  Add to Cart - ${selectedProduct.price}
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
       {/* Hero Section */}
       <section className="hero-section" id="home">
         {heroSlides.map((slide, index) => (
           <div
             key={slide.id}
             className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
-            style={{ background: slide.gradient }}
+            style={{
+              background: slide.gradient,
+              pointerEvents: index === currentSlide ? 'auto' : 'none'
+            }}
           >
             <div className="hero-overlay" />
 
@@ -344,7 +445,9 @@ const Home: React.FC = () => {
               </motion.div>
             </div>
 
-            <div className="hero-content">
+            <div
+              className="hero-content"
+            >
               <motion.h1
                 className="hero-title"
                 initial={{ opacity: 0, y: 50 }}
@@ -366,6 +469,7 @@ const Home: React.FC = () => {
                 initial={{ opacity: 0, y: 50 }}
                 animate={index === currentSlide ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
                 transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
+                onClick={() => router.push('/shop')}
               >
                 Explore Collection
               </motion.button>
@@ -411,6 +515,7 @@ const Home: React.FC = () => {
               className="category-card"
               variants={itemVariants}
               whileHover={{ y: -10, transition: { duration: 0.2 } }}
+              onClick={() => router.push(`/category/${category.slug}`)}
             >
               <div className="category-image-wrapper">
                 <img src={category.image} alt={category.name} className="category-image" />
@@ -451,16 +556,10 @@ const Home: React.FC = () => {
               className="product-card"
               variants={itemVariants}
               whileHover={{ y: -8, transition: { duration: 0.2 } }}
+              onClick={() => setSelectedProduct(product)}
             >
               <div className="product-image-wrapper">
                 <img src={product.image} alt={product.name} className="product-image" />
-                <motion.button
-                  className="quick-view"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Quick View
-                </motion.button>
               </div>
               <div className="product-info">
                 <span className="product-category">{product.category}</span>
@@ -472,7 +571,7 @@ const Home: React.FC = () => {
                     className="add-to-cart"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => addToCart(product)}
+                    onClick={(e) => addToCart(product, e)}
                   >
                     Add to Cart
                   </motion.button>

@@ -1,22 +1,58 @@
-/* Products Section */
-.products-section {
-    position: relative;
-    width: 100%;
+/* Category Page */
+.category-page {
+    min-height: 100vh;
     background: #fafaf8;
-    padding: 8rem 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding: 2rem;
 }
 
-.products-section .section-header {
-    width: 100%;
+.category-header {
     max-width: 1400px;
+    margin: 0 auto 4rem;
 }
 
-.products-grid {
-    width: 100%;
+.back-btn {
+    font-family: 'Lato', sans-serif;
+    background: white;
+    border: 2px solid #2d5f3f;
+    color: #2d5f3f;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 2rem;
+}
+
+.back-btn:hover {
+    background: #2d5f3f;
+    color: white;
+}
+
+.category-header-content {
+    text-align: center;
+}
+
+.category-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    color: #2d5f3f;
+    margin: 0 0 1rem 0;
+    font-weight: 700;
+}
+
+.category-description {
+    font-family: 'Lato', sans-serif;
+    font-size: 1.3rem;
+    color: #6b8e7c;
+    margin: 0;
+    font-weight: 300;
+}
+
+/* Products Grid */
+.category-products {
     max-width: 1400px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2.5rem;
@@ -104,6 +140,123 @@
 
 .add-to-cart:hover {
     background: #234a31;
+}
+
+/* Category Not Found */
+.category-not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    text-align: center;
+}
+
+.category-not-found h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    color: #2d5f3f;
+    margin-bottom: 2rem;
+}
+
+.category-not-found button {
+    font-family: 'Lato', sans-serif;
+    background: #2d5f3f;
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.category-not-found button:hover {
+    background: #1a3a25;
+}
+
+/* Toast (reuse from toast.css) */
+.toast {
+    position: fixed;
+    top: 100px;
+    right: 2rem;
+    background: white;
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 320px;
+    border-left: 4px solid #2d5f3f;
+}
+
+.toast-icon {
+    width: 40px;
+    height: 40px;
+    background: #2d5f3f;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-message {
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    color: #2d5f3f;
+    margin: 0;
+    font-weight: 600;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: #6b8e7c;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.toast-close:hover {
+    background: #f5f5f0;
+    color: #2d5f3f;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .category-page {
+        padding: 1rem;
+    }
+
+    .category-products {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .toast {
+        right: 1rem;
+        left: 1rem;
+        min-width: auto;
+    }
 }
 
 
