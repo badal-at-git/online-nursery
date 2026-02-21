@@ -187,7 +187,7 @@ const Home: React.FC = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
+        staggerChildren: 0.05,
       },
     },
   };
@@ -198,7 +198,7 @@ const Home: React.FC = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.4,
         ease: 'easeOut',
       },
     },
@@ -383,7 +383,7 @@ const Home: React.FC = () => {
           className="section-header"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
+          viewport={{ once: true, margin: '-50px' }}
           variants={itemVariants}
         >
           <h2 className="section-title">Shop by Category</h2>
@@ -394,7 +394,7 @@ const Home: React.FC = () => {
           className="categories-grid"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
+          viewport={{ once: true, margin: '-50px' }}
           variants={containerVariants}
         >
           {categories.map((category, index) => (
@@ -423,7 +423,7 @@ const Home: React.FC = () => {
           className="section-header"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
+          viewport={{ once: true, margin: '-50px' }}
           variants={itemVariants}
         >
           <h2 className="section-title">Featured Plants</h2>
@@ -434,7 +434,7 @@ const Home: React.FC = () => {
           className="products-grid"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-100px' }}
+          viewport={{ once: true, margin: '-50px' }}
           variants={containerVariants}
         >
           {featuredProducts.map((product) => (
