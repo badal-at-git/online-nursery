@@ -8,7 +8,6 @@ import Header from './Header';
 import Toast from './Toast';
 import Footer from './Footer';
 import EnhancedHero from './EnhancedHero';
-import ModernInteractive from './ModernInteractive';
 import '../styles/immersive.css';
 
 interface Product {
@@ -37,6 +36,7 @@ const ImmersiveHome: React.FC = () => {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
     const containerRef = useRef<HTMLDivElement>(null);
@@ -133,9 +133,110 @@ const ImmersiveHome: React.FC = () => {
 
     return (
         <div ref={containerRef} className="immersive-container">
-            <ModernInteractive />
             <Header onCartClick={() => router.push('/cart')} cartItemCount={cartItemCount} />
             <Toast message={toastMessage} isVisible={showToast} onClose={() => setShowToast(false)} />
+
+            {/* Product Detail Modal */}
+            {selectedProduct && (
+                <motion.div
+                    className="modal-overlay"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => {
+                        setSelectedProduct(null);
+                        setSelectedImageIndex(0);
+                    }}
+                >
+                    <motion.div
+                        className="product-modal shimmer-effect"
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0.8, opacity: 0 }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className="modal-close magnetic-btn"
+                            data-cursor="Close"
+                            onClick={() => {
+                                setSelectedProduct(null);
+                                setSelectedImageIndex(0);
+                            }}
+                        >
+                            ✕
+                        </button>
+                        <div className="modal-content">
+                            <div className="modal-image-section">
+                                <div className="modal-image">
+                                    <img
+                                        src={(selectedProduct.images && selectedProduct.images[selectedImageIndex]) || selectedProduct.image}
+                                        alt={selectedProduct.name}
+                                    />
+                                </div>
+                                {selectedProduct.images && selectedProduct.images.length > 1 && (
+                                    <div className="modal-thumbnails">
+                                        {selectedProduct.images.map((img, index) => (
+                                            <motion.div
+                                                key={index}
+                                                className={`thumbnail ${index === selectedImageIndex ? 'active' : ''}`}
+                                                onClick={() => setSelectedImageIndex(index)}
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                            >
+                                                <img src={img} alt={`${selectedProduct.name} ${index + 1}`} />
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                            <div className="modal-details">
+                                <span className="modal-category">{selectedProduct.category}</span>
+                                <h2 className="modal-title gradient-text-animated">{selectedProduct.name}</h2>
+                                <p className="modal-description">{selectedProduct.description}</p>
+                                <div className="modal-price">${selectedProduct.price}</div>
+                                <div className="modal-info">
+                                    <div className="info-item">
+                                        <span className="info-icon">💧</span>
+                                        <div>
+                                            <strong>Watering</strong>
+                                            <p>Water when top soil is dry</p>
+                                        </div>
+                                    </div>
+                                    <div className="info-item">
+                                        <span className="info-icon">☀️</span>
+                                        <div>
+                                            <strong>Light</strong>
+                                            <p>Bright indirect sunlight</p>
+                                        </div>
+                                    </div>
+                                    <div className="info-item">
+                                        <span className="info-icon">🌡️</span>
+                                        <div>
+                                            <strong>Temperature</strong>
+                                            <p>18-24°C (65-75°F)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <motion.button
+                                    className="modal-add-to-cart magnetic-btn ripple-effect"
+                                    data-cursor="Add"
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        addToCart(selectedProduct);
+                                        setSelectedProduct(null);
+                                        setSelectedImageIndex(0);
+                                    }}
+                                >
+                                    Add to Cart - ${selectedProduct.price}
+                                </motion.button>
+                            </div>
+                        </div>
+                    </motion.div>
+                </motion.div>
+            )}
 
             {/* Enhanced Hero Section */}
             <EnhancedHero mousePosition={mousePosition} scrollProgress={smoothProgress} />
@@ -231,6 +332,7 @@ const ProductCard3D: React.FC<{
             }}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={() => onClick(product)}
             style={{
                 transformStyle: 'preserve-3d',
                 perspective: 1000,
@@ -371,19 +473,14 @@ const CategoriesGrid3D: React.FC<{ mousePosition: { x: number; y: number } }> = 
 
 // Parallax Features
 const ParallaxFeatures: React.FC<{ scrollProgress: any }> = ({ scrollProgress }) => {
-    const y1 = useTransform(scrollProgress, [0, 1], [0, -200]);
-    const y2 = useTransform(scrollProgress, [0, 1], [0, -400]);
-
     return (
         <section className="parallax-features">
-            <motion.div className="feature-layer" style={{ y: y1 }}>
+            <div className="feature-layer">
                 <FeatureCard icon="🚚" title="Free Delivery" description="On orders over $50" />
                 <FeatureCard icon="🌱" title="Care Guides" description="Expert tips included" />
-            </motion.div>
-            <motion.div className="feature-layer" style={{ y: y2 }}>
                 <FeatureCard icon="💚" title="Healthy Guarantee" description="30-day protection" />
                 <FeatureCard icon="♻️" title="Eco-Friendly" description="Sustainable packaging" />
-            </motion.div>
+            </div>
         </section>
     );
 };
@@ -429,7 +526,8 @@ const ImmersiveCTA: React.FC = () => {
                 <h2>Ready to Transform Your Space?</h2>
                 <p>Join thousands of happy plant parents</p>
                 <motion.button
-                    className="cta-button-3d"
+                    className="cta-button-3d magnetic-btn ripple-effect"
+                    data-cursor="Shop"
                     onClick={() => router.push('/shop')}
                     whileHover={{ scale: 1.1, rotateZ: -5 }}
                     whileTap={{ scale: 0.95 }}

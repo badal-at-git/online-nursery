@@ -490,7 +490,7 @@ export default function CategoryPage() {
                         transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <button className="modal-close" onClick={() => setSelectedProduct(null)}>
+                        <button className="modal-close magnetic-btn" onClick={() => setSelectedProduct(null)} data-cursor="Close">
                             ✕
                         </button>
                         <div className="modal-content">
@@ -519,7 +519,7 @@ export default function CategoryPage() {
                             </div>
                             <div className="modal-details">
                                 <span className="modal-category">{selectedProduct.category}</span>
-                                <h2 className="modal-title">{selectedProduct.name}</h2>
+                                <h2 className="modal-title gradient-text-animated">{selectedProduct.name}</h2>
                                 <p className="modal-description">{selectedProduct.description}</p>
                                 <div className="modal-price">${selectedProduct.price}</div>
                                 <div className="modal-info">
@@ -546,13 +546,14 @@ export default function CategoryPage() {
                                     </div>
                                 </div>
                                 <motion.button
-                                    className="modal-add-to-cart"
+                                    className="modal-add-to-cart magnetic-btn ripple-effect"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     onClick={(e) => {
                                         addToCart(selectedProduct, e);
                                         setSelectedProduct(null);
                                     }}
+                                    data-cursor="Add"
                                 >
                                     Add to Cart - ${selectedProduct.price}
                                 </motion.button>
@@ -563,11 +564,11 @@ export default function CategoryPage() {
             )}
 
             <div className="category-header">
-                <button className="back-btn" onClick={() => router.push('/')}>
+                <button className="back-btn magnetic-btn" onClick={() => router.push('/')} data-cursor="Back">
                     ← Back to Home
                 </button>
                 <div className="category-header-content">
-                    <h1 className="category-title">{category.name}</h1>
+                    <h1 className="category-title gradient-text-animated">{category.name}</h1>
                     <p className="category-description">{category.description}</p>
                 </div>
             </div>
@@ -576,7 +577,8 @@ export default function CategoryPage() {
                 {products.map((product, index) => (
                     <motion.div
                         key={product.id}
-                        className="product-card"
+                        className="product-card hover-lift"
+                        data-cursor="View"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05, duration: 0.4 }}
@@ -593,10 +595,11 @@ export default function CategoryPage() {
                             <div className="product-footer">
                                 <span className="product-price">${product.price}</span>
                                 <motion.button
-                                    className="add-to-cart"
+                                    className="add-to-cart magnetic-btn ripple-effect"
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
                                     onClick={(e) => addToCart(product, e)}
+                                    data-cursor="Add"
                                 >
                                     Add to Cart
                                 </motion.button>

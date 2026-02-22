@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import ModernInteractive from '../components/ModernInteractive';
 
 export const metadata: Metadata = {
   title: 'Online Nursery - Premium Plants & Flowers',
@@ -14,7 +15,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ModernInteractive />
+        {children}
+      </body>
     </html>
   );
 }

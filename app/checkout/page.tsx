@@ -83,10 +83,10 @@ export default function CheckoutPage() {
     return (
         <div className="checkout-page">
             <div className="checkout-header">
-                <button className="back-btn" onClick={() => router.push('/cart')}>
+                <button className="back-btn magnetic-btn" data-cursor="Back" onClick={() => router.push('/cart')}>
                     ← Back to Cart
                 </button>
-                <h1 className="checkout-title">Checkout</h1>
+                <h1 className="checkout-title gradient-text-animated">Checkout</h1>
             </div>
 
             <div className="checkout-container">
@@ -96,7 +96,7 @@ export default function CheckoutPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                     >
-                        <h2 className="section-title">Contact Information</h2>
+                        <h2 className="section-title gradient-text-animated">Contact Information</h2>
                         <div className="form-row">
                             <div className="form-group">
                                 <label>First Name</label>
@@ -149,7 +149,7 @@ export default function CheckoutPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                     >
-                        <h2 className="section-title">Shipping Address</h2>
+                        <h2 className="section-title gradient-text-animated">Shipping Address</h2>
                         <div className="form-group">
                             <label>Street Address</label>
                             <input
@@ -200,11 +200,11 @@ export default function CheckoutPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
                     >
-                        <h2 className="section-title">Payment Method</h2>
+                        <h2 className="section-title gradient-text-animated">Payment Method</h2>
 
                         <div className="payment-methods">
                             <div
-                                className={`payment-option ${paymentMethod === 'card' ? 'active' : ''}`}
+                                className={`payment-option hover-lift ${paymentMethod === 'card' ? 'active' : ''}`}
                                 onClick={() => setPaymentMethod('card')}
                             >
                                 <div className="payment-radio">
@@ -220,7 +220,7 @@ export default function CheckoutPage() {
                             </div>
 
                             <div
-                                className={`payment-option ${paymentMethod === 'paypal' ? 'active' : ''}`}
+                                className={`payment-option hover-lift ${paymentMethod === 'paypal' ? 'active' : ''}`}
                                 onClick={() => setPaymentMethod('paypal')}
                             >
                                 <div className="payment-radio">
@@ -236,7 +236,7 @@ export default function CheckoutPage() {
                             </div>
 
                             <div
-                                className={`payment-option ${paymentMethod === 'cod' ? 'active' : ''}`}
+                                className={`payment-option hover-lift ${paymentMethod === 'cod' ? 'active' : ''}`}
                                 onClick={() => setPaymentMethod('cod')}
                             >
                                 <div className="payment-radio">
@@ -351,7 +351,8 @@ export default function CheckoutPage() {
 
                     <motion.button
                         type="submit"
-                        className="place-order-btn"
+                        className="place-order-btn magnetic-btn ripple-effect"
+                        data-cursor="Place Order"
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         initial={{ opacity: 0 }}
@@ -368,7 +369,7 @@ export default function CheckoutPage() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.2 }}
                 >
-                    <h2 className="summary-title">Order Summary</h2>
+                    <h2 className="summary-title gradient-text-animated">Order Summary</h2>
                     <div className="summary-items">
                         {cartItems.map((item) => (
                             <div key={item.id} className="summary-item">

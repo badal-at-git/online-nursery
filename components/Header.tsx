@@ -50,19 +50,22 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemCount }) => {
                     {/* Actions */}
                     <div className="header-actions">
                         <button
-                            className="auth-btn"
+                            className="auth-btn magnetic-btn"
+                            data-cursor="Sign In"
                             onClick={() => setIsSignInOpen(true)}
                         >
                             Sign In
                         </button>
                         <button
-                            className="auth-btn signup"
+                            className="auth-btn signup magnetic-btn ripple-effect"
+                            data-cursor="Sign Up"
                             onClick={() => setIsSignUpOpen(true)}
                         >
                             Sign Up
                         </button>
                         <button
-                            className="cart-btn"
+                            className="cart-btn magnetic-btn"
+                            data-cursor="Cart"
                             onClick={onCartClick}
                             aria-label="Shopping cart"
                         >
@@ -122,7 +125,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemCount }) => {
                         onClick={() => setIsSignInOpen(false)}
                     >
                         <motion.div
-                            className="modal"
+                            className="modal shimmer-effect"
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -130,13 +133,14 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemCount }) => {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <button
-                                className="modal-close"
+                                className="modal-close magnetic-btn"
+                                data-cursor="Close"
                                 onClick={() => setIsSignInOpen(false)}
                                 aria-label="Close"
                             >
                                 ✕
                             </button>
-                            <h2 className="modal-title">Welcome Back</h2>
+                            <h2 className="modal-title gradient-text-animated">Welcome Back</h2>
                             <p className="modal-subtitle">Sign in to your account</p>
                             <form onSubmit={handleSignIn} className="auth-form">
                                 <div className="form-group">
@@ -174,7 +178,8 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemCount }) => {
                                 </div>
                                 <motion.button
                                     type="submit"
-                                    className="submit-btn"
+                                    className="submit-btn magnetic-btn ripple-effect"
+                                    data-cursor="Submit"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >
@@ -210,7 +215,7 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemCount }) => {
                         onClick={() => setIsSignUpOpen(false)}
                     >
                         <motion.div
-                            className="modal"
+                            className="modal shimmer-effect"
                             initial={{ opacity: 0, scale: 0.9, y: 20 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -218,13 +223,14 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemCount }) => {
                             onClick={(e) => e.stopPropagation()}
                         >
                             <button
-                                className="modal-close"
+                                className="modal-close magnetic-btn"
+                                data-cursor="Close"
                                 onClick={() => setIsSignUpOpen(false)}
                                 aria-label="Close"
                             >
                                 ✕
                             </button>
-                            <h2 className="modal-title">Join Us</h2>
+                            <h2 className="modal-title gradient-text-animated">Join Us</h2>
                             <p className="modal-subtitle">Create your account</p>
                             <form onSubmit={handleSignUp} className="auth-form">
                                 <div className="form-group">
@@ -281,7 +287,8 @@ const Header: React.FC<HeaderProps> = ({ onCartClick, cartItemCount }) => {
                                 </label>
                                 <motion.button
                                     type="submit"
-                                    className="submit-btn"
+                                    className="submit-btn magnetic-btn ripple-effect"
+                                    data-cursor="Submit"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                 >

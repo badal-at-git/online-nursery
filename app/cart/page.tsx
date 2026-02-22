@@ -45,10 +45,10 @@ export default function CartPage() {
     return (
         <div className="cart-page">
             <div className="cart-page-header">
-                <button className="back-btn" onClick={() => router.push('/')}>
+                <button className="back-btn magnetic-btn" data-cursor="Back" onClick={() => router.push('/')}>
                     ← Back to Shop
                 </button>
-                <h1 className="cart-page-title">Shopping Cart</h1>
+                <h1 className="cart-page-title gradient-text-animated">Shopping Cart</h1>
             </div>
 
             <div className="cart-page-container">
@@ -62,7 +62,8 @@ export default function CartPage() {
                         <h2 className="empty-title">Your cart is empty</h2>
                         <p className="empty-text">Add some plants to get started!</p>
                         <motion.button
-                            className="continue-shopping-btn"
+                            className="continue-shopping-btn magnetic-btn ripple-effect"
+                            data-cursor="Shop"
                             onClick={() => router.push('/')}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
@@ -90,14 +91,16 @@ export default function CartPage() {
                                     <div className="cart-page-item-actions">
                                         <div className="quantity-controls">
                                             <button
-                                                className="quantity-btn"
+                                                className="quantity-btn magnetic-btn"
+                                                data-cursor="-"
                                                 onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
                                             >
                                                 −
                                             </button>
                                             <span className="quantity-value">{item.quantity}</span>
                                             <button
-                                                className="quantity-btn"
+                                                className="quantity-btn magnetic-btn"
+                                                data-cursor="+"
                                                 onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                             >
                                                 +
@@ -105,7 +108,8 @@ export default function CartPage() {
                                         </div>
                                         <p className="item-subtotal">${(item.price * item.quantity).toFixed(2)}</p>
                                         <button
-                                            className="remove-btn"
+                                            className="remove-btn magnetic-btn"
+                                            data-cursor="Remove"
                                             onClick={() => removeItem(item.id)}
                                         >
                                             Remove
@@ -121,7 +125,7 @@ export default function CartPage() {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.3 }}
                         >
-                            <h2 className="summary-title">Order Summary</h2>
+                            <h2 className="summary-title gradient-text-animated">Order Summary</h2>
                             <div className="summary-row">
                                 <span>Subtotal</span>
                                 <span>${total.toFixed(2)}</span>
@@ -135,7 +139,8 @@ export default function CartPage() {
                                 <span>${total.toFixed(2)}</span>
                             </div>
                             <motion.button
-                                className="checkout-btn"
+                                className="checkout-btn magnetic-btn ripple-effect"
+                                data-cursor="Checkout"
                                 onClick={() => router.push('/checkout')}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
@@ -143,7 +148,8 @@ export default function CartPage() {
                                 Proceed to Checkout
                             </motion.button>
                             <button
-                                className="continue-shopping-link"
+                                className="continue-shopping-link magnetic-btn"
+                                data-cursor="Continue"
                                 onClick={() => router.push('/')}
                             >
                                 Continue Shopping

@@ -19,10 +19,10 @@ const Footer: React.FC = () => {
                             Bringing nature to your doorstep.
                         </p>
                         <div className="footer-social">
-                            <a href="#facebook" className="social-link" aria-label="Facebook">📘</a>
-                            <a href="#instagram" className="social-link" aria-label="Instagram">📷</a>
-                            <a href="#twitter" className="social-link" aria-label="Twitter">🐦</a>
-                            <a href="#pinterest" className="social-link" aria-label="Pinterest">📌</a>
+                            <a href="#facebook" className="social-link magnetic-btn" aria-label="Facebook" data-cursor="Facebook">📘</a>
+                            <a href="#instagram" className="social-link magnetic-btn" aria-label="Instagram" data-cursor="Instagram">📷</a>
+                            <a href="#twitter" className="social-link magnetic-btn" aria-label="Twitter" data-cursor="Twitter">🐦</a>
+                            <a href="#pinterest" className="social-link magnetic-btn" aria-label="Pinterest" data-cursor="Pinterest">📌</a>
                         </div>
                     </div>
 

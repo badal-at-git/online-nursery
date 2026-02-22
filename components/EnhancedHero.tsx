@@ -125,10 +125,6 @@ const EnhancedHero: React.FC<HeroSectionProps> = ({ mousePosition, scrollProgres
             {/* Hero Content */}
             <motion.div
                 className="hero-content-enhanced"
-                style={{
-                    x: mousePosition.x * 15,
-                    y: mousePosition.y * 15,
-                }}
             >
                 {/* Slide Content */}
                 {slides.map((slide, index) => (
