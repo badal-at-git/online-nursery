@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import '../../styles/shop-page.css';
@@ -11,6 +11,7 @@ interface Product {
     price: number;
     category: string;
     image: string;
+    images?: string[];
     description: string;
 }
 
@@ -20,29 +21,27 @@ export default function ShopPage() {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+    const scrollPosition = useRef(0);
 
     // Prevent body scroll when modal is open
     useEffect(() => {
         if (selectedProduct) {
-            const scrollY = window.scrollY;
+            // Store current scroll position
+            scrollPosition.current = window.scrollY;
             document.body.style.position = 'fixed';
-            document.body.style.top = `-${scrollY}px`;
+            document.body.style.top = `-${scrollPosition.current}px`;
             document.body.style.width = '100%';
             document.body.classList.add('modal-open');
+            setSelectedImageIndex(0);
         } else {
-            const scrollY = document.body.style.top;
+            // Restore scroll position
             document.body.style.position = '';
             document.body.style.top = '';
             document.body.style.width = '';
             document.body.classList.remove('modal-open');
-            window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            window.scrollTo(0, scrollPosition.current);
         }
-        return () => {
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
-            document.body.classList.remove('modal-open');
-        };
     }, [selectedProduct]);
 
     const allProducts: Product[] = [
@@ -53,6 +52,11 @@ export default function ShopPage() {
             price: 45.99,
             category: 'Indoor Plants',
             image: 'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Large, tropical indoor plant',
         },
         {
@@ -61,6 +65,11 @@ export default function ShopPage() {
             price: 68.99,
             category: 'Indoor Plants',
             image: 'https://images.pexels.com/photos/6208087/pexels-photo-6208087.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/6208087/pexels-photo-6208087.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Statement indoor tree',
         },
         {
@@ -69,6 +78,11 @@ export default function ShopPage() {
             price: 28.99,
             category: 'Indoor Plants',
             image: 'https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4505171/pexels-photo-4505171.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Hardy air purifier',
         },
         {
@@ -77,6 +91,11 @@ export default function ShopPage() {
             price: 22.99,
             category: 'Indoor Plants',
             image: 'https://images.pexels.com/photos/4505171/pexels-photo-4505171.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/4505171/pexels-photo-4505171.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Easy-care trailing plant',
         },
         {
@@ -85,6 +104,11 @@ export default function ShopPage() {
             price: 35.99,
             category: 'Indoor Plants',
             image: 'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Drought-tolerant beauty',
         },
         {
@@ -93,6 +117,11 @@ export default function ShopPage() {
             price: 42.99,
             category: 'Indoor Plants',
             image: 'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Bold glossy leaves',
         },
         {
@@ -101,6 +130,11 @@ export default function ShopPage() {
             price: 32.99,
             category: 'Indoor Plants',
             image: 'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Elegant white blooms',
         },
         {
@@ -109,6 +143,11 @@ export default function ShopPage() {
             price: 18.99,
             category: 'Indoor Plants',
             image: 'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4505171/pexels-photo-4505171.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Easy propagation',
         },
         {
@@ -117,6 +156,11 @@ export default function ShopPage() {
             price: 38.99,
             category: 'Indoor Plants',
             image: 'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Heart-shaped leaves',
         },
         {
@@ -125,6 +169,11 @@ export default function ShopPage() {
             price: 44.99,
             category: 'Indoor Plants',
             image: 'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Prayer plant with patterns',
         },
         // Flowering Plants
@@ -134,6 +183,11 @@ export default function ShopPage() {
             price: 32.99,
             category: 'Flowering Plants',
             image: 'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Elegant white blooms',
         },
         {
@@ -142,6 +196,11 @@ export default function ShopPage() {
             price: 55.99,
             category: 'Flowering Plants',
             image: 'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Exotic flowering beauty',
         },
         {
@@ -150,6 +209,11 @@ export default function ShopPage() {
             price: 24.99,
             category: 'Flowering Plants',
             image: 'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Compact flowering plant',
         },
         {
@@ -158,6 +222,11 @@ export default function ShopPage() {
             price: 38.99,
             category: 'Flowering Plants',
             image: 'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Heart-shaped flowers',
         },
         {
@@ -166,6 +235,11 @@ export default function ShopPage() {
             price: 26.99,
             category: 'Flowering Plants',
             image: 'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Colorful blooms',
         },
         {
@@ -174,6 +248,11 @@ export default function ShopPage() {
             price: 44.99,
             category: 'Flowering Plants',
             image: 'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Tropical flowering shrub',
         },
         {
@@ -182,6 +261,11 @@ export default function ShopPage() {
             price: 29.99,
             category: 'Flowering Plants',
             image: 'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Bright colorful flowers',
         },
         {
@@ -190,6 +274,11 @@ export default function ShopPage() {
             price: 48.99,
             category: 'Flowering Plants',
             image: 'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Stunning spring blooms',
         },
         // Succulents
@@ -199,6 +288,11 @@ export default function ShopPage() {
             price: 24.99,
             category: 'Succulents',
             image: 'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Set of 5 mini succulents',
         },
         {
@@ -207,6 +301,11 @@ export default function ShopPage() {
             price: 19.99,
             category: 'Succulents',
             image: 'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Medicinal succulent',
         },
         {
@@ -215,6 +314,11 @@ export default function ShopPage() {
             price: 29.99,
             category: 'Succulents',
             image: 'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Lucky money tree',
         },
         {
@@ -223,6 +327,11 @@ export default function ShopPage() {
             price: 16.99,
             category: 'Succulents',
             image: 'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Rosette-shaped succulent',
         },
         {
@@ -231,6 +340,11 @@ export default function ShopPage() {
             price: 27.99,
             category: 'Succulents',
             image: 'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Trailing succulent',
         },
         {
@@ -239,6 +353,11 @@ export default function ShopPage() {
             price: 21.99,
             category: 'Succulents',
             image: 'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Zebra-striped succulent',
         },
         {
@@ -247,6 +366,11 @@ export default function ShopPage() {
             price: 18.99,
             category: 'Succulents',
             image: 'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Colorful ground cover',
         },
         {
@@ -255,6 +379,11 @@ export default function ShopPage() {
             price: 23.99,
             category: 'Succulents',
             image: 'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Compact succulent',
         },
         // Bouquets
@@ -264,6 +393,11 @@ export default function ShopPage() {
             price: 59.99,
             category: 'Bouquets',
             image: 'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Seasonal mixed flowers',
         },
         {
@@ -272,6 +406,11 @@ export default function ShopPage() {
             price: 69.99,
             category: 'Bouquets',
             image: 'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Classic red roses',
         },
         {
@@ -280,6 +419,11 @@ export default function ShopPage() {
             price: 54.99,
             category: 'Bouquets',
             image: 'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Colorful tulips',
         },
         {
@@ -288,6 +432,11 @@ export default function ShopPage() {
             price: 49.99,
             category: 'Bouquets',
             image: 'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Bright sunflowers',
         },
         {
@@ -295,6 +444,11 @@ export default function ShopPage() {
             name: 'Lily Bouquet',
             price: 64.99,
             category: 'Bouquets',
+            images: [
+                'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             image: 'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
             description: 'Elegant lilies',
         },
@@ -304,6 +458,11 @@ export default function ShopPage() {
             price: 44.99,
             category: 'Bouquets',
             image: 'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Natural wildflowers',
         },
         {
@@ -312,6 +471,11 @@ export default function ShopPage() {
             price: 74.99,
             category: 'Bouquets',
             image: 'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Luxurious peonies',
         },
         {
@@ -320,6 +484,11 @@ export default function ShopPage() {
             price: 39.99,
             category: 'Bouquets',
             image: 'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+            images: [
+                'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+                'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+            ],
             description: 'Cheerful daisies',
         },
     ];
@@ -395,8 +564,28 @@ export default function ShopPage() {
                             ✕
                         </button>
                         <div className="modal-content">
-                            <div className="modal-image">
-                                <img src={selectedProduct.image} alt={selectedProduct.name} />
+                            <div className="modal-image-section">
+                                <div className="modal-image">
+                                    <img
+                                        src={(selectedProduct.images && selectedProduct.images[selectedImageIndex]) || selectedProduct.image}
+                                        alt={selectedProduct.name}
+                                    />
+                                </div>
+                                {selectedProduct.images && selectedProduct.images.length > 1 && (
+                                    <div className="modal-thumbnails">
+                                        {selectedProduct.images.map((img, index) => (
+                                            <motion.div
+                                                key={index}
+                                                className={`thumbnail ${index === selectedImageIndex ? 'active' : ''}`}
+                                                onClick={() => setSelectedImageIndex(index)}
+                                                whileHover={{ scale: 1.05 }}
+                                                whileTap={{ scale: 0.95 }}
+                                            >
+                                                <img src={img} alt={`${selectedProduct.name} ${index + 1}`} />
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                             <div className="modal-details">
                                 <span className="modal-category">{selectedProduct.category}</span>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Header from './Header';
@@ -19,6 +19,7 @@ interface Product {
   price: number;
   category: string;
   image: string;
+  images?: string[]; // Multiple images for gallery
   description: string;
 }
 
@@ -46,30 +47,28 @@ const Home: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const scrollPosition = useRef(0);
   const { scrollY } = useScroll();
 
   // Prevent body scroll when modal is open
   useEffect(() => {
     if (selectedProduct) {
-      const scrollY = window.scrollY;
+      // Store current scroll position
+      scrollPosition.current = window.scrollY;
       document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
+      document.body.style.top = `-${scrollPosition.current}px`;
       document.body.style.width = '100%';
       document.body.classList.add('modal-open');
+      setSelectedImageIndex(0); // Reset to first image when opening modal
     } else {
-      const scrollY = document.body.style.top;
+      // Restore scroll position
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.width = '';
       document.body.classList.remove('modal-open');
-      window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      window.scrollTo(0, scrollPosition.current);
     }
-    return () => {
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.width = '';
-      document.body.classList.remove('modal-open');
-    };
   }, [selectedProduct]);
 
   // Sample data - will be replaced with database later
@@ -135,6 +134,12 @@ const Home: React.FC = () => {
       price: 45.99,
       category: 'Indoor Plants',
       image: 'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+      images: [
+        'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/4505171/pexels-photo-4505171.jpeg?auto=compress&cs=tinysrgb&w=500',
+      ],
       description: 'Large, tropical indoor plant',
     },
     {
@@ -143,6 +148,11 @@ const Home: React.FC = () => {
       price: 32.99,
       category: 'Flowering Plants',
       image: 'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+      images: [
+        'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+      ],
       description: 'Elegant white blooms',
     },
     {
@@ -151,6 +161,12 @@ const Home: React.FC = () => {
       price: 24.99,
       category: 'Succulents',
       image: 'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+      images: [
+        'https://images.pexels.com/photos/2132240/pexels-photo-2132240.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+      ],
       description: 'Set of 5 mini succulents',
     },
     {
@@ -159,6 +175,11 @@ const Home: React.FC = () => {
       price: 59.99,
       category: 'Bouquets',
       image: 'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+      images: [
+        'https://images.pexels.com/photos/1458603/pexels-photo-1458603.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/1407305/pexels-photo-1407305.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/7084309/pexels-photo-7084309.jpeg?auto=compress&cs=tinysrgb&w=500',
+      ],
       description: 'Seasonal mixed flowers',
     },
     {
@@ -167,6 +188,11 @@ const Home: React.FC = () => {
       price: 68.99,
       category: 'Indoor Plants',
       image: 'https://images.pexels.com/photos/6208087/pexels-photo-6208087.jpeg?auto=compress&cs=tinysrgb&w=500',
+      images: [
+        'https://images.pexels.com/photos/6208087/pexels-photo-6208087.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/4751978/pexels-photo-4751978.jpeg?auto=compress&cs=tinysrgb&w=500',
+      ],
       description: 'Statement indoor tree',
     },
     {
@@ -175,6 +201,12 @@ const Home: React.FC = () => {
       price: 28.99,
       category: 'Indoor Plants',
       image: 'https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=500',
+      images: [
+        'https://images.pexels.com/photos/2123482/pexels-photo-2123482.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/6208086/pexels-photo-6208086.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/4505171/pexels-photo-4505171.jpeg?auto=compress&cs=tinysrgb&w=500',
+        'https://images.pexels.com/photos/3125195/pexels-photo-3125195.jpeg?auto=compress&cs=tinysrgb&w=500',
+      ],
       description: 'Hardy air purifier',
     },
   ];
@@ -277,8 +309,28 @@ const Home: React.FC = () => {
               ✕
             </button>
             <div className="modal-content">
-              <div className="modal-image">
-                <img src={selectedProduct.image} alt={selectedProduct.name} />
+              <div className="modal-image-section">
+                <div className="modal-image">
+                  <img
+                    src={(selectedProduct.images && selectedProduct.images[selectedImageIndex]) || selectedProduct.image}
+                    alt={selectedProduct.name}
+                  />
+                </div>
+                {selectedProduct.images && selectedProduct.images.length > 1 && (
+                  <div className="modal-thumbnails">
+                    {selectedProduct.images.map((img, index) => (
+                      <motion.div
+                        key={index}
+                        className={`thumbnail ${index === selectedImageIndex ? 'active' : ''}`}
+                        onClick={() => setSelectedImageIndex(index)}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <img src={img} alt={`${selectedProduct.name} ${index + 1}`} />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="modal-details">
                 <span className="modal-category">{selectedProduct.category}</span>
