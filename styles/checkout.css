@@ -241,23 +241,7 @@
 }
 
 .summary-items {
-    max-height: 320px;
-    overflow-y: auto;
     margin-bottom: 1rem;
-}
-
-.summary-items::-webkit-scrollbar {
-    width: 6px;
-}
-
-.summary-items::-webkit-scrollbar-track {
-    background: #f0f0f0;
-    border-radius: 10px;
-}
-
-.summary-items::-webkit-scrollbar-thumb {
-    background: #2d5f3f;
-    border-radius: 10px;
 }
 
 .summary-item {
