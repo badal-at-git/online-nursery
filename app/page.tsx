@@ -1,5 +1,5 @@
-import ImmersiveHome from '@/components/ImmersiveHome';
+import ImmersiveHomeOptimized from '@/components/ImmersiveHomeOptimized';
 
 export default function Page() {
-  return <ImmersiveHome />;
+  return <ImmersiveHomeOptimized />;
 }

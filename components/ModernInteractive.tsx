@@ -1,25 +1,42 @@
 'use client';
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 import '../styles/modern-interactive.css';
+
+// Throttle function for performance
+const throttle = (func: Function, delay: number) => {
+    let lastCall = 0;
+    return (...args: any[]) => {
+        const now = Date.now();
+        if (now - lastCall >= delay) {
+            lastCall = now;
+            func(...args);
+        }
+    };
+};
 
 const ModernInteractive: React.FC = () => {
     const cursorX = useMotionValue(-100);
     const cursorY = useMotionValue(-100);
     const [isHovering, setIsHovering] = useState(false);
     const [cursorText, setCursorText] = useState('');
+    const observerRef = useRef<IntersectionObserver | null>(null);
 
-    const springConfig = { damping: 25, stiffness: 200 };
+    const springConfig = { damping: 30, stiffness: 300, mass: 0.5 };
     const cursorXSpring = useSpring(cursorX, springConfig);
     const cursorYSpring = useSpring(cursorY, springConfig);
 
-    useEffect(() => {
-        const moveCursor = (e: MouseEvent) => {
+    // Throttled mouse move handler
+    const moveCursor = useCallback(
+        throttle((e: MouseEvent) => {
             cursorX.set(e.clientX);
             cursorY.set(e.clientY);
-        };
+        }, 16), // ~60fps
+        [cursorX, cursorY]
+    );
 
+    useEffect(() => {
         const handleMouseEnter = (e: Event) => {
             const target = e.target as HTMLElement;
             if (target.classList.contains('magnetic-btn') ||
@@ -37,20 +54,16 @@ const ModernInteractive: React.FC = () => {
 
         window.addEventListener('mousemove', moveCursor);
 
-        // Add listeners to interactive elements
-        document.querySelectorAll('.magnetic-btn, .product-card-3d, .category-card-3d').forEach(el => {
-            el.addEventListener('mouseenter', handleMouseEnter);
-            el.addEventListener('mouseleave', handleMouseLeave);
-        });
+        // Use event delegation for better performance
+        document.body.addEventListener('mouseenter', handleMouseEnter, true);
+        document.body.addEventListener('mouseleave', handleMouseLeave, true);
 
         return () => {
             window.removeEventListener('mousemove', moveCursor);
-            document.querySelectorAll('.magnetic-btn, .product-card-3d, .category-card-3d').forEach(el => {
-                el.removeEventListener('mouseenter', handleMouseEnter);
-                el.removeEventListener('mouseleave', handleMouseLeave);
-            });
+            document.body.removeEventListener('mouseenter', handleMouseEnter, true);
+            document.body.removeEventListener('mouseleave', handleMouseLeave, true);
         };
-    }, [cursorX, cursorY]);
+    }, [moveCursor]);
 
     return (
         <>
@@ -95,14 +108,14 @@ const ScrollProgress: React.FC = () => {
     const [scrollProgress, setScrollProgress] = useState(0);
 
     useEffect(() => {
-        const updateScrollProgress = () => {
+        const updateScrollProgress = throttle(() => {
             const scrollPx = document.documentElement.scrollTop;
             const winHeightPx = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             const scrolled = (scrollPx / winHeightPx) * 100;
             setScrollProgress(scrolled);
-        };
+        }, 16);
 
-        window.addEventListener('scroll', updateScrollProgress);
+        window.addEventListener('scroll', updateScrollProgress, { passive: true });
         return () => window.removeEventListener('scroll', updateScrollProgress);
     }, []);
 
@@ -121,16 +134,17 @@ const RevealOnScroll: React.FC = () => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('revealed');
+                        // Stop observing once revealed for better performance
+                        observer.unobserve(entry.target);
                     }
                 });
             },
-            { threshold: 0.1 }
+            { threshold: 0.1, rootMargin: '50px' }
         );
 
         // Observe all elements with reveal class
-        document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
-            observer.observe(el);
-        });
+        const elements = document.querySelectorAll('.reveal-on-scroll');
+        elements.forEach((el) => observer.observe(el));
 
         return () => observer.disconnect();
     }, []);
@@ -138,4 +152,4 @@ const RevealOnScroll: React.FC = () => {
     return null;
 };
 
-export default ModernInteractive;
+export default React.memo(ModernInteractive);

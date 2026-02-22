@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, useTransform } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import '../styles/hero-enhanced.css';
@@ -15,9 +15,8 @@ const EnhancedHero: React.FC<HeroSectionProps> = ({ mousePosition, scrollProgres
     const [currentSlide, setCurrentSlide] = useState(0);
     const y = useTransform(scrollProgress, [0, 1], ['0%', '30%']);
     const opacity = useTransform(scrollProgress, [0, 0.3], [1, 0]);
-    const scale = useTransform(scrollProgress, [0, 0.5], [1, 1.1]);
 
-    const slides = [
+    const slides = useMemo(() => [
         {
             video: 'https://cdn.pixabay.com/video/2023/05/02/160827-822871142_large.mp4',
             title: 'Transform Your Space',
@@ -39,13 +38,23 @@ const EnhancedHero: React.FC<HeroSectionProps> = ({ mousePosition, scrollProgres
             description: 'Expert care guides with every purchase',
             color: '#6bc785',
         },
-    ];
+    ], []);
 
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentSlide((prev) => (prev + 1) % slides.length);
         }, 6000);
         return () => clearInterval(interval);
+    }, [slides.length]);
+
+    const handleShopClick = useCallback(() => {
+        router.push('/shop');
+    }, [router]);
+
+    const handleLearnClick = useCallback(() => {
+        document.querySelector('.floating-products-section')?.scrollIntoView({
+            behavior: 'smooth'
+        });
     }, []);
 
     return (
@@ -53,173 +62,164 @@ const EnhancedHero: React.FC<HeroSectionProps> = ({ mousePosition, scrollProgres
             className="hero-enhanced"
             style={{ opacity }}
         >
-            {/* Video Backgrounds */}
+            {/* Video Backgrounds - Only load current slide */}
             <div className="hero-videos-container">
-                {slides.map((slide, index) => (
+                <motion.div
+                    className="hero-video-slide active"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1.5 }}
+                >
                     <motion.div
-                        key={index}
-                        className={`hero-video-slide ${index === currentSlide ? 'active' : ''}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: index === currentSlide ? 1 : 0 }}
-                        transition={{ duration: 1.5 }}
+                        className="hero-video-bg"
+                        style={{ y }}
                     >
-                        <motion.div
-                            className="hero-video-bg"
-                            style={{ y, scale }}
+                        <video
+                            autoPlay
+                            loop
+                            muted
+                            playsInline
+                            className="hero-video"
+                            key={slides[currentSlide].video}
                         >
-                            <video
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className="hero-video"
-                                key={slide.video}
-                            >
-                                <source src={slide.video} type="video/mp4" />
-                            </video>
-                            <div className="hero-video-overlay" />
-                        </motion.div>
+                            <source src={slides[currentSlide].video} type="video/mp4" />
+                        </video>
+                        <div className="hero-video-overlay" />
                     </motion.div>
-                ))}
+                </motion.div>
             </div>
 
-            {/* Animated Grid */}
+            {/* Reduced Grid - 10 instead of 20 */}
             <div className="hero-grid-overlay">
-                {[...Array(20)].map((_, i) => (
-                    <motion.div
+                {[...Array(10)].map((_, i) => (
+                    <div
                         key={i}
                         className="grid-line"
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1 }}
-                        transition={{ duration: 2, delay: i * 0.05 }}
+                        style={{
+                            transform: `translateX(${mousePosition.x * (i % 2 === 0 ? 10 : -10)}px)`,
+                            transition: 'transform 0.3s ease-out'
+                        }}
                     />
                 ))}
             </div>
 
-            {/* Floating Orbs */}
-            <div className="floating-orbs">
+            {/* Reduced Blobs - 4 instead of 8 */}
+            <div className="morphing-blobs">
+                {[...Array(4)].map((_, i) => (
+                    <motion.div
+                        key={i}
+                        className="blob"
+                        style={{
+                            left: `${15 + i * 25}%`,
+                            top: `${30 + (i % 2) * 30}%`,
+                            x: mousePosition.x * (60 + i * 15),
+                            y: mousePosition.y * (60 + i * 15),
+                        }}
+                        animate={{
+                            scale: [1, 1.3, 1],
+                            rotate: [0, 180, 360],
+                        }}
+                        transition={{
+                            duration: 20 + i * 3,
+                            repeat: Infinity,
+                            ease: 'linear',
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Reduced Shapes - 8 instead of 15 */}
+            <div className="geometric-shapes">
                 {[...Array(8)].map((_, i) => (
                     <motion.div
                         key={i}
-                        className="orb"
+                        className={`shape shape-${i % 4}`}
                         style={{
-                            left: `${10 + i * 12}%`,
-                            top: `${20 + (i % 3) * 25}%`,
+                            left: `${10 + i * 11}%`,
+                            top: `${15 + (i % 3) * 30}%`,
+                            x: mousePosition.x * (40 + i * 10),
+                            y: mousePosition.y * (40 + i * 10),
                         }}
                         animate={{
-                            y: [0, -50, 0],
-                            x: [0, 25, 0],
-                            scale: [1, 1.3, 1],
-                            opacity: [0.3, 0.7, 0.3],
+                            rotate: [0, 360],
                         }}
                         transition={{
-                            duration: 8 + i * 2,
+                            duration: 25 - i * 2,
+                            repeat: Infinity,
+                            ease: 'linear',
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Reduced Dots - 20 instead of 40 */}
+            <div className="glowing-dots">
+                {[...Array(20)].map((_, i) => (
+                    <motion.div
+                        key={i}
+                        className="dot"
+                        style={{
+                            left: `${(i * 10) % 100}%`,
+                            top: `${Math.floor(i / 10) * 40 + 20}%`,
+                        }}
+                        animate={{
+                            opacity: [0.3, 0.8, 0.3],
+                            scale: [1, 1.2, 1],
+                        }}
+                        transition={{
+                            duration: 4 + (i % 5),
                             repeat: Infinity,
                             ease: 'easeInOut',
-                            delay: i * 0.5,
+                            delay: i * 0.2,
                         }}
                     />
                 ))}
             </div>
 
             {/* Hero Content */}
-            <motion.div
-                className="hero-content-enhanced"
-            >
-                {/* Slide Content */}
-                {slides.map((slide, index) => (
-                    <motion.div
-                        key={index}
-                        className="slide-content"
-                        initial={{ opacity: 0, y: 50 }}
-                        animate={{
-                            opacity: index === currentSlide ? 1 : 0,
-                            y: index === currentSlide ? 0 : 50,
-                            display: index === currentSlide ? 'block' : 'none',
-                        }}
-                        transition={{ duration: 1, ease: 'easeOut' }}
-                    >
-                        <motion.div
-                            className="hero-badge"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: 0.3 }}
-                        >
-                            <span className="badge-icon">🌿</span>
-                            <span>Premium Quality</span>
-                        </motion.div>
+            <div className="hero-content-enhanced">
+                <div className="slide-content">
+                    <div className="hero-badge">
+                        <span className="badge-icon">🌿</span>
+                        <span>Premium Quality</span>
+                    </div>
 
-                        <motion.h1
-                            className="hero-title-new"
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5, duration: 0.8 }}
+                    <h1 className="hero-title-new">
+                        <span className="title-main">{slides[currentSlide].title}</span>
+                        <span
+                            className="title-accent"
+                            style={{ color: slides[currentSlide].color }}
                         >
-                            <span className="title-main">{slide.title}</span>
-                            <span
-                                className="title-accent"
-                                style={{ color: slide.color }}
-                            >
-                                {slide.subtitle}
-                            </span>
-                        </motion.h1>
+                            {slides[currentSlide].subtitle}
+                        </span>
+                    </h1>
 
-                        <motion.p
-                            className="hero-description-new"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.7, duration: 0.8 }}
+                    <p className="hero-description-new">
+                        {slides[currentSlide].description}
+                    </p>
+
+                    <div className="hero-actions">
+                        <button
+                            className="hero-cta-primary magnetic-btn ripple-effect"
+                            data-cursor="Shop"
+                            onClick={handleShopClick}
                         >
-                            {slide.description}
-                        </motion.p>
+                            <span>Shop Now</span>
+                            <span className="cta-arrow">→</span>
+                        </button>
 
-                        <motion.div
-                            className="hero-actions"
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.9, duration: 0.8 }}
+                        <button
+                            className="hero-cta-secondary magnetic-btn"
+                            data-cursor="Learn"
+                            onClick={handleLearnClick}
                         >
-                            <motion.button
-                                className="hero-cta-primary magnetic-btn ripple-effect"
-                                data-cursor="Shop"
-                                onClick={() => router.push('/shop')}
-                                whileHover={{ scale: 1.05, y: -3 }}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                <span>Shop Now</span>
-                                <motion.span
-                                    className="cta-arrow"
-                                    animate={{ x: [0, 5, 0] }}
-                                    transition={{ duration: 1.5, repeat: Infinity }}
-                                >
-                                    →
-                                </motion.span>
-                            </motion.button>
-
-                            <motion.button
-                                className="hero-cta-secondary magnetic-btn"
-                                data-cursor="Learn"
-                                onClick={() => {
-                                    document.querySelector('.floating-products-section')?.scrollIntoView({
-                                        behavior: 'smooth'
-                                    });
-                                }}
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.98 }}
-                            >
-                                <span>Learn More</span>
-                            </motion.button>
-                        </motion.div>
-                    </motion.div>
-                ))}
+                            <span>Learn More</span>
+                        </button>
+                    </div>
+                </div>
 
                 {/* Stats */}
-                <motion.div
-                    className="hero-stats"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1.2, duration: 0.8 }}
-                >
+                <div className="hero-stats">
                     <div className="stat-item">
                         <span className="stat-number">500+</span>
                         <span className="stat-label">Plant Varieties</span>
@@ -234,30 +234,23 @@ const EnhancedHero: React.FC<HeroSectionProps> = ({ mousePosition, scrollProgres
                         <span className="stat-number">98%</span>
                         <span className="stat-label">Satisfaction</span>
                     </div>
-                </motion.div>
-            </motion.div>
+                </div>
+            </div>
 
             {/* Navigation Dots */}
-            <motion.div
-                className="hero-navigation"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
-            >
+            <div className="hero-navigation">
                 {slides.map((_, index) => (
-                    <motion.button
+                    <button
                         key={index}
                         className={`nav-dot ${index === currentSlide ? 'active' : ''}`}
                         onClick={() => setCurrentSlide(index)}
-                        whileHover={{ scale: 1.2 }}
-                        whileTap={{ scale: 0.9 }}
                     >
                         <span className="dot-inner" />
-                    </motion.button>
+                    </button>
                 ))}
-            </motion.div>
+            </div>
         </motion.section>
     );
 };
 
-export default EnhancedHero;
+export default React.memo(EnhancedHero);
