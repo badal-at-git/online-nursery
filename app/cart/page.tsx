@@ -136,6 +136,7 @@ export default function CartPage() {
                             </div>
                             <motion.button
                                 className="checkout-btn"
+                                onClick={() => router.push('/checkout')}
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                             >
