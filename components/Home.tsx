@@ -4,12 +4,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Header from './Header';
+import HeroSection from './HeroSection';
+import { ProductsSection } from './ProductsSection';
+import { CategoriesSection } from './CategoriesSection';
 import Toast from './Toast';
 import Footer from './Footer';
 import '../styles/common.css';
-import '../styles/hero.css';
-import '../styles/categories.css';
-import '../styles/products.css';
+import '../styles/ui-components.css';
 import '../styles/features.css';
 
 // Types
@@ -61,13 +62,18 @@ const Home: React.FC = () => {
       document.body.style.width = '100%';
       document.body.classList.add('modal-open');
       setSelectedImageIndex(0); // Reset to first image when opening modal
-    } else {
+    } else if (scrollPosition.current !== 0) {
       // Restore scroll position
+      const savedPosition = scrollPosition.current;
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.width = '';
       document.body.classList.remove('modal-open');
-      window.scrollTo(0, scrollPosition.current);
+
+      // Use requestAnimationFrame to ensure DOM is ready
+      requestAnimationFrame(() => {
+        window.scrollTo(0, savedPosition);
+      });
     }
   }, [selectedProduct]);
 
@@ -268,7 +274,6 @@ const Home: React.FC = () => {
       y: 0,
       transition: {
         duration: 0.4,
-        ease: 'easeOut',
       },
     },
   };
@@ -378,262 +383,17 @@ const Home: React.FC = () => {
       )}
 
       {/* Hero Section */}
-      <section className="hero-section" id="home">
-        {heroSlides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`hero-slide ${index === currentSlide ? 'active' : ''}`}
-            style={{
-              background: slide.gradient,
-              pointerEvents: index === currentSlide ? 'auto' : 'none'
-            }}
-          >
-            <div className="hero-overlay" />
-
-            {/* Animated Background Elements */}
-            <div className="hero-bg-elements">
-              <motion.div
-                className="floating-element leaf-1"
-                animate={{
-                  y: [0, -30, 0],
-                  rotate: [0, 10, 0],
-                }}
-                transition={{
-                  duration: 6,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              >
-                🌿
-              </motion.div>
-              <motion.div
-                className="floating-element leaf-2"
-                animate={{
-                  y: [0, -40, 0],
-                  rotate: [0, -15, 0],
-                }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: 0.5,
-                }}
-              >
-                🍃
-              </motion.div>
-              <motion.div
-                className="floating-element flower-1"
-                animate={{
-                  y: [0, -25, 0],
-                  x: [0, 10, 0],
-                  rotate: [0, 5, 0],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: 1,
-                }}
-              >
-                🌸
-              </motion.div>
-              <motion.div
-                className="floating-element flower-2"
-                animate={{
-                  y: [0, -35, 0],
-                  x: [0, -15, 0],
-                }}
-                transition={{
-                  duration: 9,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: 1.5,
-                }}
-              >
-                🌺
-              </motion.div>
-              <motion.div
-                className="floating-element plant-1"
-                animate={{
-                  y: [0, -20, 0],
-                  scale: [1, 1.1, 1],
-                }}
-                transition={{
-                  duration: 7,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: 2,
-                }}
-              >
-                🪴
-              </motion.div>
-              <motion.div
-                className="floating-element sparkle-1"
-                animate={{
-                  scale: [0, 1, 0],
-                  opacity: [0, 1, 0],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-              >
-                ✨
-              </motion.div>
-              <motion.div
-                className="floating-element sparkle-2"
-                animate={{
-                  scale: [0, 1, 0],
-                  opacity: [0, 1, 0],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: 1.5,
-                }}
-              >
-                ✨
-              </motion.div>
-            </div>
-
-            <div
-              className="hero-content"
-            >
-              <motion.h1
-                className="hero-title"
-                initial={{ opacity: 0, y: 50 }}
-                animate={index === currentSlide ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-              >
-                {slide.title}
-              </motion.h1>
-              <motion.p
-                className="hero-subtitle"
-                initial={{ opacity: 0, y: 50 }}
-                animate={index === currentSlide ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: 'easeOut' }}
-              >
-                {slide.subtitle}
-              </motion.p>
-              <motion.button
-                className="hero-cta"
-                initial={{ opacity: 0, y: 50 }}
-                animate={index === currentSlide ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-                onClick={() => router.push('/shop')}
-              >
-                Explore Collection
-              </motion.button>
-            </div>
-          </div>
-        ))}
-
-        <div className="hero-dots">
-          {heroSlides.map((_, index) => (
-            <button
-              key={index}
-              className={`dot ${index === currentSlide ? 'active' : ''}`}
-              onClick={() => setCurrentSlide(index)}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
-      </section>
+      <HeroSection />
 
       {/* Categories Section */}
-      <section className="categories-section" id="categories">
-        <motion.div
-          className="section-header"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          variants={itemVariants}
-        >
-          <h2 className="section-title">Shop by Category</h2>
-          <p className="section-subtitle">Discover your perfect green companion</p>
-        </motion.div>
-
-        <motion.div
-          className="categories-grid"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          variants={containerVariants}
-        >
-          {categories.map((category, index) => (
-            <motion.div
-              key={category.id}
-              className="category-card"
-              variants={itemVariants}
-              whileHover={{ y: -10, transition: { duration: 0.2 } }}
-              onClick={() => router.push(`/category/${category.slug}`)}
-            >
-              <div className="category-image-wrapper">
-                <img src={category.image} alt={category.name} className="category-image" />
-                <div className="category-overlay" />
-              </div>
-              <div className="category-info">
-                <h3 className="category-name">{category.name}</h3>
-                <p className="category-description">{category.description}</p>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </section>
+      <CategoriesSection categories={categories} />
 
       {/* Featured Products */}
-      <section className="products-section" id="products">
-        <motion.div
-          className="section-header"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          variants={itemVariants}
-        >
-          <h2 className="section-title">Featured Plants</h2>
-          <p className="section-subtitle">Handpicked favorites from our greenhouse</p>
-        </motion.div>
-
-        <motion.div
-          className="products-grid"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-50px' }}
-          variants={containerVariants}
-        >
-          {featuredProducts.map((product) => (
-            <motion.div
-              key={product.id}
-              className="product-card"
-              variants={itemVariants}
-              whileHover={{ y: -8, transition: { duration: 0.2 } }}
-              onClick={() => setSelectedProduct(product)}
-            >
-              <div className="product-image-wrapper">
-                <img src={product.image} alt={product.name} className="product-image" />
-              </div>
-              <div className="product-info">
-                <span className="product-category">{product.category}</span>
-                <h3 className="product-name">{product.name}</h3>
-                <p className="product-description">{product.description}</p>
-                <div className="product-footer">
-                  <span className="product-price">${product.price}</span>
-                  <motion.button
-                    className="add-to-cart"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={(e) => addToCart(product, e)}
-                  >
-                    Add to Cart
-                  </motion.button>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
-      </section>
+      <ProductsSection
+        products={featuredProducts}
+        onProductClick={setSelectedProduct}
+        onAddToCart={(product) => addToCart(product)}
+      />
 
       {/* Features Section */}
       <section className="features-section">

@@ -76,3 +76,118 @@
     opacity: 0.95;
     font-weight: 300;
 }
+
+
+/* Modern Interactive Animations for Categories */
+@keyframes categoryReveal {
+    from {
+        opacity: 0;
+        transform: translateY(60px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.category-card {
+    animation: categoryReveal 0.7s ease forwards;
+    animation-play-state: paused;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.category-card.visible {
+    animation-play-state: running;
+}
+
+.category-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.category-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.category-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.category-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+/* 3D tilt effect on hover */
+.category-card:hover {
+    transform: translateY(-15px) scale(1.03);
+    box-shadow: 0 30px 70px rgba(45, 95, 63, 0.3);
+}
+
+.category-card:hover .category-image {
+    transform: scale(1.15);
+}
+
+.category-image {
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Overlay animation */
+.category-overlay {
+    transition: all 0.5s ease;
+}
+
+.category-card:hover .category-overlay {
+    background: linear-gradient(to top, rgba(45, 95, 63, 0.95) 0%, rgba(45, 95, 63, 0.3) 60%);
+}
+
+/* Text slide up effect */
+.category-info {
+    transition: transform 0.4s ease;
+}
+
+.category-card:hover .category-info {
+    transform: translateY(-10px);
+}
+
+.category-name {
+    transition: all 0.3s ease;
+}
+
+.category-card:hover .category-name {
+    transform: scale(1.05);
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Glow effect */
+@keyframes glow {
+
+    0%,
+    100% {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    50% {
+        box-shadow: 0 10px 30px rgba(107, 199, 133, 0.4), 0 0 40px rgba(107, 199, 133, 0.2);
+    }
+}
+
+.category-card:hover {
+    animation: glow 2s ease-in-out infinite;
+}
+
+/* Shine effect */
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    z-index: 3;
+    transition: left 0.7s;
+}
+
+.category-card:hover::before {
+    left: 150%;
+}

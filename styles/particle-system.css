@@ -1,0 +1,76 @@
+/* Particle System Styles */
+
+.particle-system {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    overflow: hidden;
+}
+
+.floating-particle {
+    position: absolute;
+    background: radial-gradient(circle, rgba(107, 199, 133, 0.6) 0%, rgba(107, 199, 133, 0.2) 50%, transparent 100%);
+    border-radius: 50%;
+    filter: blur(2px);
+    box-shadow: 0 0 20px rgba(107, 199, 133, 0.4);
+}
+
+/* Cursor Trail */
+.cursor-trail-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.cursor-trail {
+    position: fixed;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.trail-leaf {
+    font-size: 1.2rem;
+    filter: drop-shadow(0 2px 5px rgba(107, 199, 133, 0.5));
+    animation: rotate-leaf 1s linear;
+}
+
+@keyframes rotate-leaf {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Sparkles */
+.sparkle-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.sparkle {
+    position: absolute;
+    font-size: 1.5rem;
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .trail-leaf {
+        font-size: 1rem;
+    }
+
+    .sparkle {
+        font-size: 1.2rem;
+    }
+
+    .floating-particle {
+        filter: blur(1px);
+    }
+}

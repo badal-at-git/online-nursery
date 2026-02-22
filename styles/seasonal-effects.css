@@ -1,0 +1,111 @@
+/* Seasonal Effects Styles */
+
+/* Pollen/Seeds */
+.pollen-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    overflow: hidden;
+}
+
+.pollen {
+    position: absolute;
+    font-size: 1rem;
+    color: #ffd700;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.6));
+}
+
+/* Rain */
+.rain-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 4;
+    overflow: hidden;
+}
+
+.raindrop {
+    position: absolute;
+    width: 2px;
+    height: 20px;
+    background: linear-gradient(to bottom, transparent, rgba(173, 216, 230, 0.6), transparent);
+    border-radius: 50%;
+    filter: blur(0.5px);
+}
+
+/* Fireflies */
+.fireflies-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    overflow: hidden;
+}
+
+.firefly {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: radial-gradient(circle, #ffeb3b 0%, rgba(255, 235, 59, 0.4) 50%, transparent 100%);
+    border-radius: 50%;
+    box-shadow:
+        0 0 10px #ffeb3b,
+        0 0 20px rgba(255, 235, 59, 0.6),
+        0 0 30px rgba(255, 235, 59, 0.4);
+    filter: blur(1px);
+}
+
+/* Petals */
+.petals-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    overflow: hidden;
+}
+
+.petal {
+    position: absolute;
+    font-size: 1.5rem;
+    filter: drop-shadow(0 2px 5px rgba(255, 182, 193, 0.5));
+}
+
+/* Dewdrops */
+.dewdrops-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+}
+
+.dewdrop {
+    position: absolute;
+    font-size: 1.2rem;
+    filter: drop-shadow(0 2px 5px rgba(173, 216, 230, 0.6));
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pollen {
+        font-size: 0.8rem;
+    }
+
+    .petal {
+        font-size: 1.2rem;
+    }
+
+    .dewdrop {
+        font-size: 1rem;
+    }
+
+    .firefly {
+        width: 6px;
+        height: 6px;
+    }
+
+    .raindrop {
+        width: 1.5px;
+        height: 15px;
+    }
+}
